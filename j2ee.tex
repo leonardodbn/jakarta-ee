@@ -1,0 +1,91 @@
+\documentclass[11pt, letterpaper, titlepage]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{arsclassica}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{dirtree}
+
+\geometry{a4paper,top=3cm,bottom=3cm,left=2cm,right=2cm,%
+heightrounded,bindingoffset=5mm}
+
+
+\begin{document}
+\title{Jakarta EE}
+\author{Leonardo De Boni}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Introduzione}
+Il package che ci interessa \'{e}: \textcolor{yellow}{java.net}. Le classi che ci interessano sono:
+\begin{itemize}
+    \item \textcolor{orange}{InetAddress}: rappresenta un indirizzo ip
+    \item \textcolor{orange}{Socket}: permette di creare un client
+    \item \textcolor{orange}{ServerSocket}: permette di creare un Server
+\end{itemize}
+
+\subsection{Ottenere un indirizzo ip}
+Per ottenere l'indirizzo ip a partire da un nome possiamo fare cos\'{i}:\par
+\textcolor{orange}{InetAddress} \textcolor{blue}{address} = \textcolor{orange}{InetAddress}.\textcolor{red}{getByName}(\textcolor{orange}{String} \textcolor{blue}{hostName});
+
+\subsection{Connettersi al server}
+Per connettersi a un server dopo aver ottenuto l'indirizzo possiamo creare un client cos\'{i}:\par
+\textcolor{orange}{Socket} \textcolor{blue}{socket}  = new \textcolor{orange}{Socket}(\textcolor{orange}{InetAddress} \textcolor{blue}{adress}, \textcolor{orange}{int} \textcolor{blue}{port})\\
+Dal socket possiamo ottenere un \textcolor{orange}{InputStream}:\par
+\textcolor{orange}{InputStream} \textcolor{blue}{in} = \textcolor{blue}{socket}.\textcolor{red}{getInputStream}();
+
+\section{Servlet}
+Classe che mi permette di elaborare una richiesta. Per crearne uno devo estendere la classe \textcolor{orange}{HttpServlet}.
+I metodi che posso sovrascrivere che corrispondono alle varie richieste sono i seguenti:
+\begin{itemize}
+    \item \textcolor{red}{doGet} (\textcolor{orange}{HttpServletRequest} \textcolor{blue}{req}, \textcolor{orange}{HttpServletResponse} \textcolor{blue}{res})
+    \item \textcolor{red}{doPost} (\textcolor{orange}{HttpServletRequest} \textcolor{blue}{req}, \textcolor{orange}{HttpServletResponse} \textcolor{blue}{res})
+    \item \textcolor{red}{doHead} (\textcolor{orange}{HttpServletRequest} \textcolor{blue}{req}, \textcolor{orange}{HttpServletResponse} \textcolor{blue}{res})
+    \item \textcolor{red}{doOptions} (\textcolor{orange}{HttpServletRequest} \textcolor{blue}{req}, \textcolor{orange}{HttpServletResponse} \textcolor{blue}{res})
+    \item \textcolor{red}{doTrace} (\textcolor{orange}{HttpServletRequest} \textcolor{blue}{req}, \textcolor{orange}{HttpServletResponse} \textcolor{blue}{res})
+    \item \textcolor{red}{doPut} (\textcolor{orange}{HttpServletRequest} \textcolor{blue}{req}, \textcolor{orange}{HttpServletResponse} \textcolor{blue}{res})
+    \item \textcolor{red}{doDelete} (\textcolor{orange}{HttpServletRequest} \textcolor{blue}{req}, \textcolor{orange}{HttpServletResponse} \textcolor{blue}{res})
+\end{itemize}
+
+\subsection{Servlet annotations}
+
+\newpage
+\section{Struttura di un progetto web}
+\input{directory.tex}
+
+\section{Resources}
+
+\section{Filters}
+
+\subsection{Filter annotations}
+
+\section{JSP (Jakarta Server Pages)}
+JSP mi permette di scrivere codice java all'interno di HTML. Per fare ci\`o posso
+usare delimitatori dedicati:
+\begin{itemize}
+    \item \textbf{Scriptlets}: $<$\% \dots istruzioni java \dots \%$>$
+    \item \textbf{Expressions}: $<$\%= \dots espressioni java \dots \%$>$ sar\'a mostrato al client
+    \item \textbf{Declarations}: $<$\%! \dots espressioni java \dots \%$>$ posso dichiarare metodi
+\end{itemize}
+Nelle pagine JSP ho a disposizione vari oggetti impliciti:
+\begin{itemize}
+    \item \textcolor{blue}{request} \textcolor{orange}{HttpServletRequest}
+    \item \textcolor{blue}{response} \textcolor{orange}{HttpServletResponse}
+    \item \textcolor{blue}{out} \textcolor{orange}{OutputStream} (\textcolor{blue}{response}.\textcolor{red}{getOutputStream}())
+    \item \textcolor{blue}{page} \textcolor{purple}{this}
+    \item \textcolor{blue}{exception} \textcolor{orange}{Throwable}
+    \item \textcolor{blue}{config} \textcolor{orange}{ServletConfig}
+\end{itemize}
+
+\subsection{Expression Language}
+
+\subsection{Direttive}
+
+\subsection{Tag Library}
+
+\section{Pattern MVC (Model View Controller)}
+
+\subsection{Struttura MVC}
+
+\end{document}
