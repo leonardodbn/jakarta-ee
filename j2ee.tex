@@ -9,6 +9,9 @@
 \geometry{a4paper,top=3cm,bottom=3cm,left=2cm,right=2cm,%
 heightrounded,bindingoffset=5mm}
 
+\newcommand{\openab}{\textcolor{red}{$<$\%} }
+\newcommand{\closeab}{\textcolor{red}{\%$>$} }
+
 
 \begin{document}
 \title{Jakarta EE}
@@ -64,9 +67,9 @@ I metodi che posso sovrascrivere che corrispondono alle varie richieste sono i s
 JSP mi permette di scrivere codice java all'interno di HTML. Per fare ci\`o posso
 usare delimitatori dedicati:
 \begin{itemize}
-    \item \textbf{Scriptlets}: $<$\% \dots istruzioni java \dots \%$>$
-    \item \textbf{Expressions}: $<$\%= \dots espressioni java \dots \%$>$ sar\'a mostrato al client
-    \item \textbf{Declarations}: $<$\%! \dots espressioni java \dots \%$>$ posso dichiarare metodi
+    \item \textbf{Scriptlets}: \openab \dots istruzioni java \dots \closeab
+    \item \textbf{Expressions}: \openab= \dots espressioni java \dots \closeab sar\'a mostrato al client
+    \item \textbf{Declarations}: \openab! \dots espressioni java \dots \closeab posso dichiarare metodi
 \end{itemize}
 Nelle pagine JSP ho a disposizione vari oggetti impliciti:
 \begin{itemize}
@@ -79,13 +82,34 @@ Nelle pagine JSP ho a disposizione vari oggetti impliciti:
 \end{itemize}
 
 \subsection{Expression Language}
+Permette di utilizzare \textbf{expressions} pi\'u snelle:\par
+\textcolor{red}{\$\{} expression  \textcolor{red}{\}}\\
+Quindi per esempio\par
+\openab= request.getParameter("username") \closeab\\
+diventa:\par
+\textcolor{red}{\$\{} \textcolor{blue}{param}.\textcolor{green}{username} \textcolor{red}{\}}\\
+Inoltre ho a disposizione:
+\begin{itemize}
+    \item TODO
+\end{itemize}
 
 \subsection{Direttive}
+Le direttive sono indicazioni che influenzano sulla struttura dell'oggetto:\par
+\openab\textcolor{cyan}{@page} specifiche \closeab
 
 \subsection{Tag Library}
 
+\section{Sessione}
+
+\subsection{Session e Filter}
+
 \section{Pattern MVC (Model View Controller)}
 
+\newpage
 \subsection{Struttura MVC}
+\input{mvc.tex}
+\newpage
+
+\section{REST API}
 
 \end{document}
