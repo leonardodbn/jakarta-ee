@@ -5,6 +5,7 @@
 \usepackage{xcolor}
 \usepackage{hyperref}
 \usepackage{dirtree}
+\usepackage{tabularx}
 
 \geometry{a4paper,top=3cm,bottom=3cm,left=2cm,right=2cm,%
 heightrounded,bindingoffset=5mm}
@@ -12,6 +13,19 @@ heightrounded,bindingoffset=5mm}
 \newcommand{\openab}{\textcolor{red}{$<$\%} }
 \newcommand{\closeab}{\textcolor{red}{\%$>$} }
 
+\newcommand{\opencb}[1]{\textcolor{red}{$<$c:}\textcolor{cyan}{#1} }
+\newcommand{\closecb}{\textcolor{red}{$>$}}
+
+\newcommand{\closect}[1]{\textcolor{red}{$<$/c:}\textcolor{cyan}{#1}\textcolor{red}{$>$}}
+\newcommand{\openct}[1]{\textcolor{red}{$<$c:}\textcolor{cyan}{#1}\textcolor{red}{$>$}}
+
+\newcommand{\class}[1]{\textcolor{orange}{#1}}
+\newcommand{\object}[1]{\textcolor{blue}{#1}}
+\newcommand{\method}[1]{\textcolor{red}{#1}}
+\newcommand{\propery}[1]{\textcolor{cyan}{#1}}
+\newcommand{\annotation}[1]{\textcolor{cyan}{#1}}
+
+\renewcommand{\arraystretch}{1.5} %tables extra cell space
 
 \begin{document}
 \title{Jakarta EE}
@@ -55,6 +69,7 @@ I metodi che posso sovrascrivere che corrispondono alle varie richieste sono i s
 
 \newpage
 \section{Struttura di un progetto web}
+Questa pu\'o essere la struttura semplificata di un progetto JavaEE:
 \input{directory.tex}
 
 \section{Resources}
@@ -95,9 +110,39 @@ Inoltre ho a disposizione:
 
 \subsection{Direttive}
 Le direttive sono indicazioni che influenzano sulla struttura dell'oggetto:\par
-\openab\textcolor{cyan}{@page} specifiche \closeab
+\openab\textcolor{cyan}{@page} specifiche \closeab\par
+\openab\textcolor{cyan}{@include} risorsa da includere \closeab \par
+\openab\textcolor{cyan}{@taaglib} libreria di tag speciali \closeab \\
+La direttiva \textcolor{cyan}{@page} mi permette di impostare delle specifiche, estendere
+servlet o importare pacchetti:\\
+\openab\textcolor{cyan}{@page}\par
+extends="servlet"\par
+import="package"\par
+isErrorPage="true o false"\par
+errorPage="errorPage.jsp" \closeab\\
+Con la direttiva \textcolor{cyan}{@include} posso includere una risorsa. L'utilizzo pi\'u
+comune \'e per includere header e footer che rimangono uguali nella maggior parte delle
+pagine di un sito. Utilizzo:\par
+\openab\textcolor{cyan}{@include} file="/path/to/file" \closeab \\
+La direttiva \textcolor{cyan}{@taaglib} mi permette di includere librerie di tag come per
+esempio jstl. Utilizzo di esempio:\par
+\openab\textcolor{cyan}{@taaglib} prefix="c" uri="http://java.sun.com/jsp/jstl/core"\closeab
 
 \subsection{Tag Library}
+L'equivalente dell'if \'e:\\
+\opencb{if}test="\$\{expression\}" var="nome"\closecb\par
+\$\{nome\}\\
+\closect{if}\\
+Se volessi creare una catena if/else if/else posso usare:\\
+TODO\\
+Per creare un ciclo for posso fare:\\
+\opencb{forEach}var="i" begin="1" end="5\closecb\par
+$<$li$>$ Punto numero \$\{i\}$<$/li$>$\\
+\closect{forEach}\\
+Oppure posso iterare su una collection:\\
+\opencb{forEach}items="\$\{collection\}" var="item"\closecb\par
+$<$li$>$ \$\{item.property\} $<$/li$>$\\
+\closect{forEach}
 
 \section{Sessione}
 
@@ -111,5 +156,67 @@ Le direttive sono indicazioni che influenzano sulla struttura dell'oggetto:\par
 \newpage
 
 \section{REST API}
+
+\section{JSON-B}
+Questa libreria mi permette di effettuare conversioni immediate da JSON a un Oggetto con
+propriet\`a. Per prima cosa devo ottenere il builder:\par
+\class{Jsonb} \object{builder} = \class{JsonbBuilder}.\method{create}();\\
+Successivamente se devo fare una serializzazione (Object$\rightarrow$JSON):\par
+\class{String} \object{json} = \object{builder}.\method{toJson}(\class{Object} \object{object});\\
+Invece se devo fare una deserializzazione (JSON$\rightarrow$Object):\par
+\class{Object} \object{object} = \object{builder}.\method{fromJson}(\class{String} \object{json}, \class{Object}.\propery{class});
+
+\subsection{Annotations}
+All'interno dei POJO posso usare annotations per cambiare il comportamento del builder durante
+le conversioni. A disposizione ho:
+\begin{itemize}
+    \item \annotation{@JsonbProperty}("property-name") Applicato a un getter posso cambiare il nome di una propiet\`a nel JSON
+    \item \annotation{@JsonbTransient} Ignora la propriet\`a
+\end{itemize}
+
+\section{JAX-RS}
+Per impostare il path della mia Application devo prima creare una classe che estende\par
+\class{jakarta.ws.rs.core.Application}\\
+e poi utilizzare l'annotation:\par
+\annotation{@ApplicationPath}("path")\\
+Quindi tutti gli endpoint della mia API saranno mappati sotto il path che ho appena
+impostato. Per impostare il path di un endpoint posso usare l'annotation:\par
+\annotation{@Path}("path")
+
+\subsection{Mappatura dei metodi}
+Se volessi che un metodo di un Servlet risponda a un certo metodo HTTP posso anteporre
+l'annotation corrispondente:
+\begin{table}[h!]
+    \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X | >{\centering\arraybackslash}X | >{\centering\arraybackslash}X |}
+        \hline
+        endpoint             & metodi & altro                 \\
+        \hline\hline
+        \annotation{@POST}   & CREATE & \annotation{@PATCH}   \\
+        \hline
+        \annotation{@GET}    & READ   & \annotation{@HEAD}    \\
+        \hline
+        \annotation{@PUT}    & UPDATE & \annotation{@OPTIONS} \\
+        \hline
+        \annotation{@DELETE} & DELETE &                       \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+\subsection{Mappatura dei parametri}
+Inoltre posso mappare grazie alle annotation i parametri passati tramite url al parametro di un metodo Java.
+Esempio:\par
+url: http://example.com/appname/api/endpoint?parameter=example\\
+Posso mappare il parametro a un attributo del mio metodo che risponde a GET:\par
+public \class{Object} \method{method}(\annotation{@QueryParam}("parameter") \class{String} \object{string})\\
+Se ripondo a un POST (Form) l'utilizzo \'e uguale ma il nome dell'annotation \'e:\par
+\annotation{@FormParam}
+
+\subsection{Path come parametro}
+Per utilizzare il path come parametro si possono usare le seguenti annotation:\par
+\annotation{@Path}("/\{parameter\}")\par
+\annotation{@Path}("/\{parameter\}/endpoint")\par
+public \class{Object} \method{method}(\annotation{@PathParam}("parameter") \class{String} \object{string})\\
+Possiamo inoltre assegnare a un parametro un valore di default usando l'annotation:\par
+\annotation{@DefaultValue}
 
 \end{document}
